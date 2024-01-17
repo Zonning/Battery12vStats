@@ -1,12 +1,12 @@
 # Battery 12v Stats
 
-Library to keeps easy to obtain a 12v (battery) charge level in Arduino environment.
+Library to keep it easy to monitor a 12 Volts Battery charge level and Voltage in Arduino environment.
 
 This lib was made on top of [danilopinotti Battery18650Stats](https://github.com/danilopinotti/Battery18650Stats.git)
 
 ## Compatibility
 
-This Lib theoretically compatible with any ESP that has ACP pins and want to monitor a 12v Battery. It's tested with:
+This Lib is theoretically compatible with any ESP that has ADC pins and want to monitor a 12 Volt Battery. It's tested with:
 
 - [x] [WEMOS LOLIN32 Lite]
 

@@ -1,6 +1,6 @@
 {
     "name": "Battery12vStats",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A \"Battery12vStats\" is a library for monitoring a 12v battery with esp32",
     "keywords": "batterymonitor",
     "repository":

@@ -6,7 +6,7 @@ This lib was made on top of [danilopinotti Battery18650Stats](https://github.com
 
 ## Compatibility
 
-This Lib is theoretically compatible with any ESP that has ADC pins and want to monitor a 12 Volt Battery. It's tested with:
+This Lib is theoretically compatible with any ESP that has ADC pins and want to monitor a 12 Volt Battery. Or using external like ADS1115, It's tested with:
 
 - [x] [WEMOS LOLIN32 Lite]
 
@@ -20,14 +20,14 @@ To use this Lib, you need to import and setup:
 // #define ADC_PIN 36
 // #define READS 5
 
-Battery12vStats battery();
-// Battery12vStats battery(ADC_PIN);
-// Battery12vStats battery(ADC_PIN, READS);
+BatteryStatsInternal battery();
+// BatteryStatsInternal battery(ADC_PIN);
+// BatteryStatsInternal battery(ADC_PIN, READS);
 ```
 
 Constructor parameters:
 ```cpp
-Battery12vStats(<adc_pin>, <reads>);
+BatteryStatsInternal(<adc_pin>, <reads>);
 ```
 
 - `adc_pin` (optional): The ADC Pin that lib will read (analogRead) to calculate charge level. Can be obtained at device datasheet. Default Value: `36`;
@@ -75,7 +75,7 @@ int nrReads = 20; //Around 20 reads is good, if you want a more stable input you
 
 int dt = 2000; //Delay time in loop.
 
-Battery12vStats battery(adcPin, nrReads);
+BatteryStatsInternal battery(adcPin, nrReads);
 
 void setup() {
   Serial.begin(115200);
@@ -112,6 +112,9 @@ So in this case if you get 12v in, you get 2.105v on the ADC pin through the vol
 
 You cant measure more then 3.3v with an esp32 ADC pin, check that carefully before hooking anything up to the board!
 
+## Using external ADS1115
+
+You can use ADS1115 to get better readings, See example.
 
 ## Troubleshoot and Finding Conversion Factor
 Sometimes the result of `getBatteryChargeLevel` and `getBatteryVolts` may not represents the real state of the battery.

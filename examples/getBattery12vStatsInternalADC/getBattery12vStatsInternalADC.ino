@@ -6,7 +6,7 @@ int nrReads = 20; //Around 20 reads is good, if you want a more stable input you
 
 int dt = 2000; //Delay time in loop.
 
-Battery12vStats battery(adcPin, nrReads);
+BatteryStatsInternal battery(adcPin, nrReads);
 
 void setup() {
   Serial.begin(115200);

@@ -266,6 +266,9 @@ void Battery12vStats::set_conversionFactor(double convFactor){
 
 void Battery12vStats::set_battType(int battType){
   BATTTYPE = battType;
+  if (_conversionTable != nullptr) {
+    _initConversionTable();
+  }
 }
 
 double Battery12vStats::get_conversionFactor(){

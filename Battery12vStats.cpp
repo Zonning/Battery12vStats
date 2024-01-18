@@ -3,32 +3,20 @@
 #include <Battery12vStats.h>
 
 
-Battery12vStats::Battery12vStats(int adcPin, double conversionFactor, int reads, int battType) {
+Battery12vStats::Battery12vStats(int adcPin, int reads) {
   _reads = reads;
-  _conversionFactor = conversionFactor;
   _adcPin = adcPin;
-  _battType = battType;
 }
 
-Battery12vStats::Battery12vStats(int adcPin, double conversionFactor) {
-  _reads = DEFAULT_READS;
-  _conversionFactor = conversionFactor;
-  _adcPin = adcPin;
-  _battType = DEFAULT_BATTTYPE;
-}
 
 Battery12vStats::Battery12vStats(int adcPin) {
   _reads = DEFAULT_READS;
-  _conversionFactor = DEFAULT_CONVERSION_FACTOR;
   _adcPin = adcPin;
-  _battType = DEFAULT_BATTTYPE;
 }
 
 Battery12vStats::Battery12vStats() {
   _reads = DEFAULT_READS;
-  _conversionFactor = DEFAULT_CONVERSION_FACTOR;
   _adcPin = DEFAULT_PIN;
-  _battType = DEFAULT_BATTTYPE;
 }
 
 Battery12vStats::~Battery12vStats() {
@@ -45,7 +33,7 @@ int Battery12vStats::getBatteryChargeLevel(bool useConversionTable) {
   int readValue = _avgAnalogRead(_adcPin, _reads);
   double volts = _analogReadToVolts(readValue);
 
-if (_battType == 1){ //Lead Acid
+if (BATTTYPE == 1){ //Lead Acid
   if (volts >= 12.80) {
     return 100;
   }
@@ -53,7 +41,7 @@ if (_battType == 1){ //Lead Acid
     return 0;
   }
 }
-if (_battType == 2){ //AGM
+if (BATTTYPE == 2){ //AGM
   if (volts >= 12.90) {
     return 100;
   }
@@ -61,7 +49,7 @@ if (_battType == 2){ //AGM
     return 0;
   }
 }
-if (_battType == 3){ //GEL
+if (BATTTYPE == 3){ //GEL
   if (volts >= 13.00) {
     return 100;
   }
@@ -69,7 +57,7 @@ if (_battType == 3){ //GEL
     return 0;
   }
 }
-if (_battType == 4){ //LIFEPO4
+if (BATTTYPE == 4){ //LIFEPO4
   if (volts >= 13.60) {
     return 100;
   }
@@ -77,7 +65,7 @@ if (_battType == 4){ //LIFEPO4
     return 0;
   }
 }
-if (_battType == 5){ //CUSTOM
+if (BATTTYPE == 5){ //CUSTOM
   if (volts >= 12.80) {
     return 100;
   }
@@ -94,7 +82,7 @@ if (_battType == 5){ //CUSTOM
 
 void Battery12vStats::_initConversionTable()
 {
-  if(_battType == 1){
+  if(BATTTYPE == 1){
   _conversionTable = (double*)malloc(sizeof(double)*101); //Lead Acid
   _conversionTable[0] = 10.500;
   _conversionTable[1] = 10.580;  _conversionTable[2] = 10.660; _conversionTable[3] = 10.740; _conversionTable[4] = 10.820; _conversionTable[5] = 10.900;
@@ -120,7 +108,7 @@ void Battery12vStats::_initConversionTable()
   }
 
 
-  if(_battType == 2){
+  if(BATTTYPE == 2){
   _conversionTable = (double*)malloc(sizeof(double)*101); //AGM
   _conversionTable[0] = 10.700;
   _conversionTable[1] = 10.780;  _conversionTable[2] = 10.860; _conversionTable[3] = 10.940; _conversionTable[4] = 11.020; _conversionTable[5] = 11.100;
@@ -146,7 +134,7 @@ void Battery12vStats::_initConversionTable()
   }
 
 
-  if(_battType == 3){
+  if(BATTTYPE == 3){
   _conversionTable = (double*)malloc(sizeof(double)*101); //GEL
   _conversionTable[0] = 10.800;
   _conversionTable[1] = 10.880;  _conversionTable[2] = 10.960; _conversionTable[3] = 11.040; _conversionTable[4] = 11.120; _conversionTable[5] = 11.200;
@@ -172,7 +160,7 @@ void Battery12vStats::_initConversionTable()
   }
 
 
-  if(_battType == 4){
+  if(BATTTYPE == 4){
   _conversionTable = (double*)malloc(sizeof(double)*101); //LIFEPO4
   _conversionTable[0] = 10.000;
   _conversionTable[1] = 10.200;  _conversionTable[2] = 10.400; _conversionTable[3] = 10.600; _conversionTable[4] = 10.800; _conversionTable[5] = 11.000;
@@ -198,7 +186,7 @@ void Battery12vStats::_initConversionTable()
   }
 
 
-  if(_battType == 5){
+  if(BATTTYPE == 5){
   _conversionTable = (double*)malloc(sizeof(double)*101); //CUSTOM
   _conversionTable[0] = 10.500;
   _conversionTable[1] = 10.580;  _conversionTable[2] = 10.660; _conversionTable[3] = 10.740; _conversionTable[4] = 10.820; _conversionTable[5] = 10.900;
@@ -269,5 +257,21 @@ int Battery12vStats::_getChargeLevelFromConversionTable(double volts) {
 }
 
 double Battery12vStats::_analogReadToVolts(int readValue) {
-  return readValue * _conversionFactor / 1000;
+  return readValue * CONVFACTOR / 1000;
+}
+
+void Battery12vStats::set_conversionFactor(double convFactor){
+  CONVFACTOR = convFactor;
+}
+
+void Battery12vStats::set_battType(int battType){
+  BATTTYPE = battType;
+}
+
+double Battery12vStats::get_conversionFactor(){
+  return CONVFACTOR;
+}
+
+int Battery12vStats::get_battType(){
+  return BATTTYPE;
 }

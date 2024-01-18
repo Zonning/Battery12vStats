@@ -18,30 +18,41 @@ To use this Lib, you need to import and setup:
 #include <Battery12vStats.h>
 
 // #define ADC_PIN 36
-// #define CONVERSION_FACTOR 4.855
 // #define READS 5
-// #define BATTTYPE 1
 
 Battery12vStats battery();
 // Battery12vStats battery(ADC_PIN);
-// Battery12vStats battery(ADC_PIN, CONVERSION_FACTOR);
-// Battery12vStats battery(ADC_PIN, CONVERSION_FACTOR, READS);
-// Battery12vStats battery(ADC_PIN, CONVERSION_FACTOR, READS, BATTTYPE);
+// Battery12vStats battery(ADC_PIN, READS);
 ```
 
 Constructor parameters:
 ```cpp
-Battery12vStats(<adc_pin>, <conversion_factor>, <reads>, <batttype>);
+Battery12vStats(<adc_pin>, <reads>);
 ```
 
 - `adc_pin` (optional): The ADC Pin that lib will read (analogRead) to calculate charge level. Can be obtained at device datasheet. Default Value: `36`;
-- `conversion_factor` (optional): Value used to convert ADC pin reading in real battery voltage. This value can be obtained through comparisons between code result and a voltmeter result. Default Value: `4.855`;
 - `reads` (optional): Quantity of reads to get an average of pin readings. Its used due pin reading instabilities. Default Value: `20`;
-- `battType` (optional): For accurate charge level you should choose your battery type here. Default is `1` (Lead Acid);
 ### Battery Type
 
 Default is Lead Acid battery, if you have wrong type of battery Defined the Battery Charge Level is not correct.
 1 - Lead Acid, 2 - AGM, 3 - GEL, 4 - LIFEPO4, 5 - CUSTOM
+
+You change with:
+battery.set_battType(1); Change 1 to the battery you got.
+
+Too print your current you can call:
+Serial.println(battery.get_battType());
+
+### Conversion Factor
+
+To get this number you should use a multimeter and measure the battery voltage and compare with the example code output.
+Default is 4.855
+
+You change with:
+battery.set_conversionFactor(4.855);
+
+Too print your current you can call:
+Serial.println(battery.get_conversionFactor());
 
 ### Methods
 
@@ -59,19 +70,21 @@ Returns the current battery charge level.
 #include <Arduino.h>
 #include <Battery12vStats.h>
 
-//Define battery type for better charge status accuracy, LEAD_ACID is default.
-// 1 - Lead Acid, 2 - AGM, 3 - GEL, 4 - LIFEPO4, 5 - CUSTOM
-int battType = 1;
-
 int adcPin = 36; //Define your ADC pin, Default is pin 36.
-float convFactor = 4.855; //Get this value by measure the battery with a multimeter and adjust it until its the same in the terminal.
 int nrReads = 20; //Around 20 reads is good, if you want a more stable input you should use ADS1115 with 16bits and more filter.
 
+int dt = 2000; //Delay time in loop.
 
-Battery12vStats battery(adcPin, convFactor, nrReads, battType);
+Battery12vStats battery(adcPin, nrReads);
 
 void setup() {
   Serial.begin(115200);
+
+  //Define battery type for better charge status accuracy, LEAD_ACID is default.
+  battery.set_battType(1); // 1 - Lead Acid, 2 - AGM, 3 - GEL, 4 - LIFEPO4, 5 - CUSTOM
+
+  battery.set_conversionFactor(4.855); //Default is 4.855
+
   
 }
 
@@ -81,7 +94,13 @@ void loop(){
 	
   Serial.print("Charge level: ");
   Serial.println(battery.getBatteryChargeLevel());
-  delay(2000);
+
+  Serial.print("Battery type: ");
+  Serial.println(battery.get_battType());
+
+  Serial.print("Conversion Factor: ");
+  Serial.println(battery.get_conversionFactor());
+  delay(dt);
 }
 ```
 ### Voltage Divider

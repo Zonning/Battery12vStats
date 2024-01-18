@@ -11,23 +11,25 @@
 // 1 - Lead Acid, 2 - AGM, 3 - GEL, 4 - LIFEPO4, 5 - CUSTOM
 
 #define DEFAULT_PIN 36
-#define DEFAULT_CONVERSION_FACTOR 4.855
 #define DEFAULT_READS 20
-#define DEFAULT_BATTTYPE 1
-
 class Battery12vStats {
  public:
   Battery12vStats();
   ~Battery12vStats();
   Battery12vStats(int adcPin);
-  Battery12vStats(int adcPin, double conversionFactor);
-  Battery12vStats(int adcPin, double conversionFactor, int reads, int battType);
+  Battery12vStats(int adcPin, int reads);
+
+  void set_conversionFactor(double convFactor = 4.855);
+  void set_battType(int battType = 1);
+  double get_conversionFactor();
+  int get_battType();
 
   int getBatteryChargeLevel(bool useConversionTable = true);
   double getBatteryVolts();
 
  private:
-  int _battType;
+  double CONVFACTOR = 4.855;
+  int BATTTYPE = 1;
   int _adcPin;
   int _reads;
   double _conversionFactor;

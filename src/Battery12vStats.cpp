@@ -30,7 +30,7 @@ double BatteryStatsInternal::getBatteryVolts() {
   return _analogReadToVolts(readValue);
 }
 
-int BatteryStatsInternal::getBatteryChargeLevel(bool useConversionTable) {
+int BatteryStatsInternal::getBatteryChargeLevel() {
   int readValue = _avgAnalogRead(_adcPin, _reads);
   double volts = _analogReadToVolts(readValue);
 
@@ -75,9 +75,7 @@ if (BATTTYPE == 5){ //CUSTOM
   }
 }
 
-  return useConversionTable
-         ? _getChargeLevelFromConversionTable(volts)
-         : _calculateChargeLevel(volts);
+  return _getChargeLevelFromConversionTable(volts);
 }
 
 
@@ -223,17 +221,6 @@ int BatteryStatsInternal::_avgAnalogRead(int pinNumber, int reads) {
   return (int) (totalValue / reads);
 }
 
-int BatteryStatsInternal::_calculateChargeLevel(double volts) {
-  if (volts <= 3.700) {
-    return (20 * volts) - 64;
-  }
-
-  int chargeLevel = round((-233.82 * volts * volts) + (2021.3 * volts) - 4266);
-  return ((volts > 3.755 && volts <= 3.870) || volts >= 3.940)
-    ? chargeLevel + 1
-    : chargeLevel;
-}
-
 int BatteryStatsInternal::_getChargeLevelFromConversionTable(double volts) {
   if (_conversionTable == nullptr) {
     _initConversionTable();
@@ -297,7 +284,7 @@ double BatteryStatsADS1115::getBatteryVolts() {
 }
 
 
-int BatteryStatsADS1115::getBatteryChargeLevel(bool useConversionTable) {
+int BatteryStatsADS1115::getBatteryChargeLevel() {
   int readValue = _adcValue;
   double volts = _analogReadToVolts(readValue);
 
@@ -342,9 +329,7 @@ if (BATTTYPE == 5){ //CUSTOM
   }
 }
 
-  return useConversionTable
-         ? _getChargeLevelFromConversionTable(volts)
-         : _calculateChargeLevel(volts);
+  return _getChargeLevelFromConversionTable(volts);
 }
 
 
@@ -481,17 +466,6 @@ void BatteryStatsADS1115::_initConversionTable()
 }
 
 
-
-int BatteryStatsADS1115::_calculateChargeLevel(double volts) {
-  if (volts <= 3.700) {
-    return (20 * volts) - 64;
-  }
-
-  int chargeLevel = round((-233.82 * volts * volts) + (2021.3 * volts) - 4266);
-  return ((volts > 3.755 && volts <= 3.870) || volts >= 3.940)
-    ? chargeLevel + 1
-    : chargeLevel;
-}
 
 int BatteryStatsADS1115::_getChargeLevelFromConversionTable(double volts) {
   if (_conversionTable == nullptr) {

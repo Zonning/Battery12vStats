@@ -29,7 +29,7 @@ class BatteryStatsInternal {
   double get_conversionFactor();
   int get_battType();
 
-  int getBatteryChargeLevel(bool useConversionTable = true);
+  int getBatteryChargeLevel();
   double getBatteryVolts();
 
  private:
@@ -42,7 +42,6 @@ class BatteryStatsInternal {
 
   void _initConversionTable();
   int _getChargeLevelFromConversionTable(double volts);
-  int _calculateChargeLevel(double volts);
   int _avgAnalogRead(int pinNumber, int reads);
   double _analogReadToVolts(int readValue);
 };
@@ -66,7 +65,7 @@ class BatteryStatsADS1115 {
   double get_conversionFactor();
   int get_battType();
 
-  int getBatteryChargeLevel(bool useConversionTable = true);
+  int getBatteryChargeLevel();
   double getBatteryVolts();
 
  private:
@@ -78,7 +77,6 @@ class BatteryStatsADS1115 {
 
   void _initConversionTable();
   int _getChargeLevelFromConversionTable(double volts);
-  int _calculateChargeLevel(double volts);
   double _analogReadToVolts(int readValue);
 };
 
